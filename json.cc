@@ -7,7 +7,7 @@
 
 int Json::format_level_ = 0;
 
-Json::Json() : type_(JsonType::json_null), value_(0) {}
+// son::Json() : type_(JsonType::json_null), value_(0) {}
 
 Json::Json(bool value) : type_(JsonType::json_bool), value_(value) {}
 
@@ -323,7 +323,7 @@ void Json::Remove(const std::string& key)
 	std::get<std::unordered_map<std::string, Json>>(value_).erase(key);
 }
 
-void Json::Parse(const std::string& str)
+void Json::Parse(const std::string_view& str)
 {
 	static Parser parser_s;
 	parser_s.Load(str);

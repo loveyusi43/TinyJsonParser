@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <stack>
 
 class Json
 {
@@ -21,48 +20,52 @@ public:
 		json_object
 	};
 
-	Json();
-	Json(bool value);
-	Json(int32_t value);
-	Json(double value);
-	Json(const char* value);
-	Json(const std::string& value);
-	Json(JsonType type);
-	Json(const Json& other);
-	// Json(std::vector<Json> value);
-	// Json(std::unordered_map<std::string, Json> value);
+	// Json();                           // 构造一个Json类型为null的Json
+	Json(bool value);                 // Json obj = true or Json obj = true
+	Json(int32_t value);              // Json obj = int()
+	Json(double value);               // Json obj = double()
+	Json(const char* value);          // Json obj = "hello world"
+	Json(const std::string& value);   // Json obj = std::string{}
+	Json(JsonType type = JsonType::json_null);              // Json obj = JsonType::
+	Json(const Json& other);          // Json v(obj);
 
-	Json& operator=(Json other);
+	operator bool() const;            // bool x1 = obj
+	operator int() const;             // int x2 = obj
+	operator double() const;          // double x3 = obj
+	operator std::string() const;     // std::string x4 = obj
+
+	Json& operator=(Json other);      // obj = v;
 
 	void Swap(Json& other);
 
-	operator bool() const;
-	operator int() const;
-	operator double() const;
-	operator std::string() const;
-
+	// 除了重载int、double、bool、std::string进行隐式类型转换外，我们还希望通过显式的调用成员函数来返回基本类型
 	bool asBool() const;
 	int asInt() const;
 	double asDouble() const;
 	std::string asString() const;
 
+	// 针对array的特殊操作
 	Json& operator [](size_t index);
 	void append(const Json& other);
 
+	// 针对object的特殊操作
 	Json& operator [](const char* key);
 	Json& operator [](const std::string& key);
 
+	// 判断两个Json相等与否
 	bool operator==(const Json&) const;
 	bool operator!=(const Json&) const;
 
 	using array_iterator = std::vector<Json>::iterator;
 	using object_iterator = std::unordered_map<std::string, Json>::iterator;
 
+	// 对array或object进行遍历
 	array_iterator array_begin();
 	array_iterator array_end();
 	object_iterator object_begin();
 	object_iterator object_end();
 
+	// 判断一个Json的type_字段
 	bool isNull() const { return type_ == JsonType::json_null; }
 	bool isBool() const { return type_ == JsonType::json_bool; }
 	bool isInt() const { return type_ == JsonType::json_int; }
@@ -72,19 +75,19 @@ public:
 	bool isArray() const { return type_ == JsonType::json_array; }
 	bool isObject() const { return type_ == JsonType::json_object; }
 
+	// 判断array或object中有没有对应的元素以及删除元素
 	bool Has(int index) const;
-	// bool Has(const char* key) const;
 	bool Has(const std::string& key) const;
-
 	void Remove(int index);
-	// void Remove(const char* key);
 	void Remove(const std::string& key);
 
-	void Parse(const std::string& str);
+	// 初始化一个Parser对象用于解析Json格式的字符串
+	void Parse(const std::string_view& str);
 
+	// 对该Json对象内的数据格式化输出
 	std::string Str();
 
-	int& Count() { return format_level_; }
+	static int& Count() { return format_level_; }
 
 private:
 	JsonType type_;

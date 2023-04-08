@@ -3,7 +3,7 @@
 
 #include "parser.h"
 
-void Parser::Load(const std::string& str)
+void Parser::Load(const std::string_view& str)
 {
 	source_ = str;
 	index_ = 0;
