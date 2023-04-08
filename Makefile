@@ -1,11 +1,11 @@
 CXX = g++
 target = json.out
 src = $(wildcard *.cc)
-obj = $(patsubst %.cc, %.o, $(SRC))
+obj = $(patsubst %.cc, %.o, $(src))
 CXXFlages = -c -Wall -std=c++2a
 
 $(target):$(obj)
-	#(CXX) -o $@ $^
+	$(CXX) -o $@ $^
 
 %.o:%.cc
 	$(CXX) $(CXXFlages) $<
